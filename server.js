@@ -27,6 +27,12 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+app.get("/", (req, res) => {
+    res.status(200).json({
+        message: "SMTP server is running 🚀"
+    })
+})
+
 app.post("/send-lead", async (req, res) => {
   try {
     const { name, email, phone, country_code, project_name, company_email } = req.body;
