@@ -6,7 +6,7 @@ credentials: JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT),
   scopes: ["https://www.googleapis.com/auth/spreadsheets"],
 });
 
-const spreadsheetId = "1vnw0IQM2dCRBZYe0GCNSNQdpa963lfnWylI_yeVGwPI";
+const spreadsheetId = "1zD8cj5BupUUUMofLoY07Me9kK59F67ZtLj5l20g9qwQ";
 
 async function addLead(data) {
   const client = await auth.getClient();
