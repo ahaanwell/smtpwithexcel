@@ -48,7 +48,7 @@ app.post("/send-lead", async (req, res) => {
     const fullPhone = country_code ? `${country_code} ${phone}` : phone;
 
     const mailOptions = {
-      from: `<m2ndigitalagency@gmail.com>`,
+      from: `"${name}" <m2ndigitalagency@gmail.com>`,
       to: company_email,
       subject: `New Enquiry from ${project_name}`,
       html: `
