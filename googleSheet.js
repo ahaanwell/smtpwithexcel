@@ -2,7 +2,7 @@ const { google } = require("googleapis");
 
 const auth = new google.auth.GoogleAuth({
 //   keyFile: "credentials.json",
-credentials: JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT),
+keyFile: "credentials.json",
   scopes: ["https://www.googleapis.com/auth/spreadsheets"],
 });
 
@@ -30,7 +30,7 @@ async function addLead(data) {
         data.email,
         countryCode,
         data.phone,
-        data.projectName,
+        data.project_name,
         date,
         time
       ]]
