@@ -38,17 +38,17 @@ app.get("/", (req, res) => {
 
 app.post("/send-lead", async (req, res) => {
   try {
-    const { name, email, phone, country_code, project_name, company_email } = req.body;
+    const { name, email, number, country_code, project_name, company_email } = req.body;
 
     // Required field validation
-    if (!name || !email || !phone || !project_name || !company_email) {
+    if (!name || !email || !number || !project_name || !company_email) {
       return res.status(400).json({
         success: false,
-        message: "Name, Email, Phone, Project Name and Company Email are required."
+        message: "Name, Email, number, Project Name and Company Email are required."
       });
     }
 
-    const fullPhone = country_code ? `${country_code} ${phone}` : phone;
+    const fullPhone = country_code ? `${country_code} ${number}` : number;
 
     const mailOptions = {
       from: `"New Lead" <info@searchmyspace.in>`,

@@ -29,7 +29,7 @@ async function addLead(data) {
         data.name,
         data.email,
         countryCode,
-        data.phone,
+        data.number,
         data.project_name,
         date,
         time
