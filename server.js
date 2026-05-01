@@ -3,6 +3,9 @@ const nodemailer = require("nodemailer");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const addLead = require("./googleSheet");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -18,13 +21,18 @@ app.use(express.json());
 // app.use(bodyParser.json());
 
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
+  host: process.env.HOST,
   port: 465,
   secure: true,
   auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
+    user: process.env.USER,
+    pass: process.env.PASS,
   },
+});
+
+console.log("🚀 SMTP Configured with:", {
+  host: process.env.HOST,
+  user: process.env.USER
 });
 
 app.get("/", (req, res) => {
