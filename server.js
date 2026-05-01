@@ -18,12 +18,12 @@ app.use(express.json());
 // app.use(bodyParser.json());
 
 const transporter = nodemailer.createTransport({
-  host: process.env.HOST || "server.mpi.ktv.mybluehostin.me",
+  host: process.env.SMTP_HOST,
   port: 465,
   secure: true,
   auth: {
-    user: process.env.USER || "info@sumadhurafolium.co",
-    pass: process.env.PASS || "City@12345#",
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
   },
 });
 
