@@ -21,18 +21,13 @@ app.use(express.json());
 // app.use(bodyParser.json());
 
 const transporter = nodemailer.createTransport({
-  host: process.env.HOST,
-  port: 465,
-  secure: true,
+  host: "smtp.hostinger.com",
+  port: 587,
+  secure: false,
   auth: {
-    user: process.env.USER,
-    pass: process.env.PASS,
+    user: "info@searchmyspace.in",
+    pass: "Searchmyspace$#321",
   },
-});
-
-console.log("🚀 SMTP Configured with:", {
-  host: process.env.HOST,
-  user: process.env.USER
 });
 
 app.get("/", (req, res) => {
@@ -56,7 +51,7 @@ app.post("/send-lead", async (req, res) => {
     const fullPhone = country_code ? `${country_code} ${phone}` : phone;
 
     const mailOptions = {
-      from: `"Website Lead" <info@sumadhurafolium.co>`,
+      from: `"New Lead" <info@searchmyspace.in>`,
       to: company_email,
       subject: `New Enquiry from ${project_name}`,
       html: `
@@ -84,7 +79,6 @@ app.post("/send-lead", async (req, res) => {
     });
 
   } catch (error) {
-  console.log("❌ ERROR:", error);
 
   res.status(500).json({
     success: false,
