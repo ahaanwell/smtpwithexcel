@@ -48,7 +48,7 @@ app.post("/send-lead", async (req, res) => {
     const fullPhone = country_code ? `${country_code} ${phone}` : phone;
 
     const mailOptions = {
-      from: `"${name}" <m2ndigitalagency@gmail.com>`,
+      from: `"Website Lead" <info@sumadhurafolium.co>`,
       to: company_email,
       subject: `New Enquiry from ${project_name}`,
       html: `
@@ -76,11 +76,15 @@ app.post("/send-lead", async (req, res) => {
     });
 
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ success: false });
-  }
+  console.log("❌ ERROR:", error);
+
+  res.status(500).json({
+    success: false,
+    message: error.message
+  });
+}
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
 });
