@@ -5,7 +5,7 @@ const cors = require("cors");
 const addLead = require("./googleSheet");
 
 const app = express();
-
+const PORT = process.env.PORT || 5000;
 const corsOptions = {
     origin: "*",
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -15,15 +15,15 @@ app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 
 const transporter = nodemailer.createTransport({
-  host: "server.mpi.ktv.mybluehostin.me",
+  host: process.env.HOST || "server.mpi.ktv.mybluehostin.me",
   port: 465,
   secure: true,
   auth: {
-    user: "info@sumadhurafolium.co",
-    pass: "City@12345#",
+    user: process.env.USER || "info@sumadhurafolium.co",
+    pass: process.env.PASS || "City@12345#",
   },
 });
 
@@ -81,6 +81,6 @@ app.post("/send-lead", async (req, res) => {
   }
 });
 
-app.listen(5000, () => {
-  console.log("Server running on port 5000");
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
