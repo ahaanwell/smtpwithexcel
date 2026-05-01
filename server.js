@@ -68,7 +68,7 @@ app.post("/send-lead", async (req, res) => {
     await addLead({
       name,
       email,
-      phone,
+      number,
       country_code: country_code || "",
       project_name
     });
