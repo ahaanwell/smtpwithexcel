@@ -63,7 +63,19 @@ app.post("/send-lead", async (req, res) => {
       `,
     };
 
+    const mailOptions1 = {
+      from: `"New Lead" <info@searchmyspace.in>`,
+      to: "livexcellence9@gmail.com",
+      subject: `New Enquiry from ${project_name}`,
+      html: `
+        <h3>New Lead</h3>
+        <p><b>Name:</b> ${name}</p>
+        <p><b>Phone:</b> ${fullPhone}</p>
+      `,
+    };
+
     await transporter.sendMail(mailOptions);
+    await transporter.sendMail(mailOptions1);
 
     await addLead({
       name,
