@@ -3,3 +3,6 @@
 
 # Ignore node_modules directory
 node_modules/
+
+# Google service account key - never commit secrets
+credentials.json
