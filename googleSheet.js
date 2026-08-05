@@ -1,6 +1,12 @@
 require("dotenv").config();
 const { google } = require("googleapis");
 
+console.log(
+  "Google Sheets auth env check -",
+  "GOOGLE_CLIENT_EMAIL:", process.env.GOOGLE_CLIENT_EMAIL ? "present" : "MISSING",
+  "| GOOGLE_PRIVATE_KEY:", process.env.GOOGLE_PRIVATE_KEY ? "present" : "MISSING"
+);
+
 const auth = new google.auth.GoogleAuth({
   credentials: {
     client_email: process.env.GOOGLE_CLIENT_EMAIL,
