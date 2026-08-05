@@ -25,7 +25,7 @@ const transporter = nodemailer.createTransport({
     secure: false,
     auth: {
         user: "info@searchmyspace.in",
-        pass: "YOUR_NEW_PASSWORD"
+        pass: "Searchmyspace$#321"
     },
     connectionTimeout: 15000,
     greetingTimeout: 15000,
