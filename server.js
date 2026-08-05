@@ -77,13 +77,18 @@ app.post("/send-lead", async (req, res) => {
     await transporter.sendMail(mailOptions);
     await transporter.sendMail(mailOptions1);
 
-    await addLead({
-      name,
-      email,
-      number,
-      country_code: country_code || "",
-      project_name
-    });
+    try {
+      await addLead({
+        name,
+        email,
+        number,
+        country_code: country_code || "",
+        project_name
+      });
+    } catch (sheetError) {
+      console.error("Google Sheet logging failed (lead email still sent):");
+      console.error(sheetError);
+    }
 
     res.json({
       success: true,
