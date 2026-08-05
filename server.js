@@ -1,5 +1,4 @@
 const express = require("express");
-const nodemailer = require("nodemailer");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const addLead = require("./googleSheet");
@@ -18,33 +17,11 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// SMTP Transporter
-const transporter = nodemailer.createTransport({
-  host: "smtp.hostinger.com",
-  port: 587,
-  secure: false,
-  family: 4, // Force IPv4
-  auth: {
-    user: "info@searchmyspace.in",
-    pass: "Searchmyspace$#321",
-  },
-});
-
-// Verify SMTP connection
-transporter.verify((error, success) => {
-    if (error) {
-        console.error("SMTP Connection Failed:");
-        console.error(error);
-    } else {
-        console.log("✅ SMTP Connected Successfully");
-    }
-});
-
 // Health Check
 app.get("/", (req, res) => {
     res.json({
         status: true,
-        message: "SMTP Server is running 🚀"
+        message: "Lead Server is running 🚀"
     });
 });
 
@@ -74,46 +51,6 @@ app.post("/send-lead", async (req, res) => {
                 message: "Name, Email, number, Project Name and Company Email are required."
             });
         }
-
-        const fullPhone = country_code
-            ? `${country_code} ${number}`
-            : number;
-
-        // Email to Company
-        await transporter.sendMail({
-            from: '"New Lead" <info@searchmyspace.in>',
-            to: company_email,
-            subject: `New Enquiry from ${project_name}`,
-            html: `
-                <h3>New Lead</h3>
-
-                <p><strong>Name:</strong> ${name}</p>
-
-                <p><strong>Email:</strong> ${email}</p>
-
-                <p><strong>Phone:</strong> ${fullPhone}</p>
-
-                <p><strong>Project:</strong> ${project_name}</p>
-            `
-        });
-
-        // Email to Admin
-        await transporter.sendMail({
-            from: '"New Lead" <info@searchmyspace.in>',
-            to: "livexcellence9@gmail.com",
-            subject: `New Enquiry from ${project_name}`,
-            html: `
-                <h3>New Lead</h3>
-
-                <p><strong>Name:</strong> ${name}</p>
-
-                <p><strong>Phone:</strong> ${fullPhone}</p>
-
-                <p><strong>Email:</strong> ${email}</p>
-
-                <p><strong>Project:</strong> ${project_name}</p>
-            `
-        });
 
         // Google Sheet
         await addLead({
