@@ -20,16 +20,14 @@ app.use(express.urlencoded({ extended: true }));
 
 // SMTP Transporter
 const transporter = nodemailer.createTransport({
-    host: "smtp.hostinger.com",
-    port: 587,
-    secure: false,
-    auth: {
-        user: "info@searchmyspace.in",
-        pass: "Searchmyspace$#321"
-    },
-    connectionTimeout: 15000,
-    greetingTimeout: 15000,
-    socketTimeout: 15000
+  host: "smtp.hostinger.com",
+  port: 587,
+  secure: false,
+  family: 4, // Force IPv4
+  auth: {
+    user: "info@searchmyspace.in",
+    pass: "Searchmyspace$#321",
+  },
 });
 
 // Verify SMTP connection
