@@ -47,7 +47,6 @@ const auth = new google.auth.GoogleAuth({
 });
 
 const spreadsheetId = "1zD8cj5BupUUUMofLoY07Me9kK59F67ZtLj5l20g9qwQ";
-// const spreadsheetId = "16fxTIPwYVZS2mrqKmEkfGPdqlawE186shhNiIpBUMXY";
 
 // Create the Sheets client once and reuse it for every lead
 let sheetsPromise;
