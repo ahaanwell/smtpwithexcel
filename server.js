@@ -24,17 +24,43 @@ const transporter = nodemailer.createTransport({
   host: "smtp.hostinger.com",
   port: 587,
   secure: false,
+  // Reuse SMTP connections instead of a fresh TLS handshake + login per email
+  pool: true,
+  maxConnections: 3,
+  // Fail fast instead of hanging for minutes on a stuck connection
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 15000,
   auth: {
-    user: "info@searchmyspace.in",
-    pass: "Searchmyspace$#321",
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
   },
 });
+
+if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+  console.error("SMTP_USER / SMTP_PASS env vars are MISSING - emails will fail");
+}
 
 app.get("/", (req, res) => {
     res.status(200).json({
         message: "SMTP server is running 🚀"
     })
 })
+
+// Since the client no longer waits for the email, retry a few times and log failures
+async function sendWithRetry(mailOptions, attempts = 3) {
+  for (let i = 1; i <= attempts; i++) {
+    try {
+      await transporter.sendMail(mailOptions);
+      console.log(`Email sent to ${mailOptions.to}`);
+      return;
+    } catch (err) {
+      console.error(`Email to ${mailOptions.to} failed (attempt ${i}/${attempts}):`, err.message);
+      if (i < attempts) await new Promise((r) => setTimeout(r, 2000 * i));
+    }
+  }
+  console.error(`Email to ${mailOptions.to} permanently failed. Subject: ${mailOptions.subject}`);
+}
 
 app.post("/send-lead", async (req, res) => {
   try {
@@ -65,7 +91,7 @@ app.post("/send-lead", async (req, res) => {
 
     const mailOptions1 = {
       from: `"New Lead" <info@searchmyspace.in>`,
-      to: "livexcellence9@gmail.com",
+      to: "davidmalan.sam@gmail.com",
       subject: `New Enquiry from ${project_name}`,
       html: `
         <h3>New Lead</h3>
@@ -74,25 +100,24 @@ app.post("/send-lead", async (req, res) => {
       `,
     };
 
-    await transporter.sendMail(mailOptions);
-    await transporter.sendMail(mailOptions1);
-
-    try {
-      await addLead({
-        name,
-        email,
-        number,
-        country_code: country_code || "",
-        project_name
-      });
-    } catch (sheetError) {
-      console.error("Google Sheet logging failed (lead email still sent):");
-      console.error(sheetError);
-    }
-
+    // Respond immediately; emails and sheet logging run in the background
     res.json({
       success: true,
       message: "Processing your request, we will notify you shortly."
+    });
+
+    sendWithRetry(mailOptions);
+    sendWithRetry(mailOptions1);
+
+    addLead({
+      name,
+      email,
+      number,
+      country_code: country_code || "",
+      project_name
+    }).catch((sheetError) => {
+      console.error("Google Sheet logging failed:");
+      console.error(sheetError);
     });
 
   } catch (error) {
@@ -103,6 +128,11 @@ app.post("/send-lead", async (req, res) => {
   });
 }
 });
+
+// Warm up the SMTP connection at startup so the first lead isn't slow
+transporter.verify()
+  .then(() => console.log("SMTP connection ready"))
+  .catch((err) => console.error("SMTP verify failed:", err.message));
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
